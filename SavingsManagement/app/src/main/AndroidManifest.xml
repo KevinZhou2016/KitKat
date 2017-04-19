@@ -23,8 +23,13 @@
             android:name=".activities.AddSavingsItemActivity"
             android:label="@string/screen_titile_add_savings_item"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"></activity>
+
+        <provider
+            android:name=".data.SavingsContentProvider"
+            android:authorities="com.kitkat.savingsmanager.provider"
+            android:enabled="true"
+            android:exported="false"></provider>
     </application>
 
 </manifest>

@@ -205,7 +205,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             style="@style/Widget.AppCompat.Button"
-            android:text="@string/action_cancel"/>
+            android:text="@string/action_cancel"
+            android:onClick="onCancelClicked"/>
 
         <Button
             android:id="@+id/btn_save"
@@ -214,6 +215,7 @@
             android:layout_weight="2"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:text="@string/action_save"
+            android:onClick="onSaveClicked"
             style="@style/Widget.AppCompat.Button.Colored"/>
 
     </LinearLayout>

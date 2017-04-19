@@ -1,8 +1,9 @@
 package com.kitkat.savingsmanagement.activities;
 
 import android.app.DatePickerDialog;
+import android.content.ContentValues;
 import android.content.Context;
-import android.support.annotation.UiThread;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -11,18 +12,18 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.kitkat.savingsmanagement.R;
+import com.kitkat.savingsmanagement.data.SavingsContentProvider;
+import com.kitkat.savingsmanagement.data.SavingsItemEntry;
 import com.kitkat.savingsmanagement.utils.Constants;
 import com.kitkat.savingsmanagement.utils.Utils;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 public class AddSavingsItemActivity extends AppCompatActivity {
 
@@ -102,22 +103,6 @@ public class AddSavingsItemActivity extends AppCompatActivity {
                 if (v.hasFocus()) {
                     showDatePicker((EditText) v, false);
                 }
-            }
-        });
-
-        Button saveBtn = (Button) findViewById(R.id.btn_save);
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(AddSavingsItemActivity.this, "Saved", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        Button cancelBtn = (Button)findViewById(R.id.btn_cancel);
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
             }
         });
     }
@@ -210,5 +195,30 @@ public class AddSavingsItemActivity extends AppCompatActivity {
 
         }
 
+    }
+
+    public void onCancelClicked(View view) {
+        onBackPressed();
+    }
+
+    public void onSaveClicked(View view) {
+        if (mExpectedInterest != 0.0f) {
+            ContentValues values = new ContentValues();
+
+            values.put(SavingsItemEntry.COLUME_NAME_BANK_NAME, mBankNameEdit.getText().toString());
+            values.put(SavingsItemEntry.COLUME_NAME_START_DATE, mStartDate.getTime());
+            values.put(SavingsItemEntry.COLUME_NAME_END_DATE, mEndDate.getTime());
+            values.put(SavingsItemEntry.COLUME_NAME_AMOUNT, mAmount);
+            values.put(SavingsItemEntry.COLUME_NAME_YIELD, mAnnualizedYield);
+            values.put(SavingsItemEntry.COLUME_NAME_INTEREST, mExpectedInterest);
+
+            getContentResolver().insert(SavingsContentProvider.CONTENT_URI, values);
+
+            Intent intent = new Intent(this, DashboardActivity.class);
+            startActivity(intent);
+
+        } else {
+            Toast.makeText(this, R.string.missing_savings_infomation, Toast.LENGTH_LONG).show();
+        }
     }
 }

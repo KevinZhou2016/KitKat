@@ -11,13 +11,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 final class SavingsDatabaseHelper extends SQLiteOpenHelper {
     
     private static final String SQL_CREATE_ENTERS = "CREATE TABLE " + SavingsItemEntry.TABLE_NAME + "(" +
-            SavingsItemEntry._ID + "INTEGER PRIMARY KEY," +
-            SavingsItemEntry.COLUME_NAME_BANK_NAME + "TEXT," +
-            SavingsItemEntry.COLUME_NAME_START_DATE + "TIMESTAMP," +
-            SavingsItemEntry.COLUME_NAME_END_DATE + "TIMESTAMP," + 
-            SavingsItemEntry.COLUME_NAME_AMOUNT + "FLOAT," +
-            SavingsItemEntry.COLUME_NAME_YIELD + "FLOAT," + 
-            SavingsItemEntry.COLUME_NAME_INTEREST + "FLOAT)";
+            SavingsItemEntry._ID + " INTEGER PRIMARY KEY," +
+            SavingsItemEntry.COLUME_NAME_BANK_NAME + " TEXT," +
+            SavingsItemEntry.COLUME_NAME_START_DATE + " TIMESTAMP," +
+            SavingsItemEntry.COLUME_NAME_END_DATE + " TIMESTAMP," +
+            SavingsItemEntry.COLUME_NAME_AMOUNT + " FLOAT," +
+            SavingsItemEntry.COLUME_NAME_YIELD + " FLOAT," +
+            SavingsItemEntry.COLUME_NAME_INTEREST + " FLOAT)";
             
 
     private static final String SQL_DELETE_ENTERS = "DROP TABLE IF EXISTS " + SavingsItemEntry.TABLE_NAME;

@@ -1,12 +1,18 @@
 package com.kitkat.savingsmanagement.utils;
 
+import android.content.Context;
+import android.content.Intent;
+
+import com.kitkat.savingsmanagement.activities.DashboardActivity;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Locale;
-import java.util.SimpleTimeZone;
+
 
 /**
  * Created by Lin on 12/04/2017.
@@ -21,6 +27,12 @@ public class Utils {
         SimpleDateFormat formatter = new SimpleDateFormat(format, Locale.US);
         return formatter.format(date);
     }
+
+    public static String formatDate(long timestamp) {
+        return formatDate(new Date(timestamp), Constants.FORMAT_DATE_YEAR_MONTH_DAY);
+    }
+
+
 
     /**
      *
@@ -43,11 +55,24 @@ public class Utils {
         return (int) ((toCalendar.getTime().getTime() - fromCalendar.getTime().getTime()) / (1000 * 60 * 60 * 24));
     }
 
+    public static boolean isToday(long timestamp) {
+        return isToday(new Date(timestamp));
+    }
+
+
+    public static boolean isToday(Date date) {
+        return getDiffDays(date, new Date()) == 0;
+    }
     /**
      *
      */
     public static boolean isNullOrEmpty(String str) {
         return str == null || str.trim().length() == 0;
+    }
+
+
+    public static <T> boolean isNullOrEmpty(final Collection<T> collection) {
+        return collection == null || collection.size() == 0;
     }
 
     /**
@@ -78,6 +103,23 @@ public class Utils {
     public static float roundFloat(float f) {
         BigDecimal b = new BigDecimal(f);
         return b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
+    }
+
+
+
+    public static String formatMoney(float money) {
+        NumberFormat nf= NumberFormat.getCurrencyInstance(Locale.CHINA);
+        return nf.format(money);
+    }
+
+    /**
+     * Go to dashboard
+     * @param context to start
+     */
+    public static void gotoDashBoard(Context context) {
+        Intent intent = new Intent(context, DashboardActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
     }
 
 

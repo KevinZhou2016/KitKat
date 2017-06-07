@@ -47,6 +47,8 @@ public class AddSavingsItemActivity extends AppCompatActivity {
     private float   mAnnualizedYield;
     private float   mExpectedInterest;
 
+    private boolean mEditMode = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,8 +120,8 @@ public class AddSavingsItemActivity extends AppCompatActivity {
             mStartDateEdit.setText(Utils.formatDate(mSavingsBean.getStartDate()));
             mEndDateEdit.setText(Utils.formatDate(mSavingsBean.getEndDate()));
             mAmountEdit.setText(Utils.formatFloat(mSavingsBean.getAmount()));
-            mEditYield.setText(Utils.formatFloat(mSavingsBean.getYield()));
-            mEditInterest.setText(Utils.formatFloat(mSavingsBean.getInterest()));
+            mAnnualizedEdit.setText(Utils.formatFloat(mSavingsBean.getYield()));
+            mExpectedEdit.setText(Utils.formatFloat(mSavingsBean.getInterest()));
 
             // update the buttons
             ((Button) findViewById(R.id.btn_save)).setText(R.string.update);
@@ -130,8 +132,8 @@ public class AddSavingsItemActivity extends AppCompatActivity {
             mStartDate = new Date(mSavingsBean.getStartDate());
             mEndDate = new Date(mSavingsBean.getEndDate());
             mAmount = mSavingsBean.getAmount();
-            mYield = mSavingsBean.getYield();
-            mInterest = mSavingsBean.getInterest();
+            mAnnualizedYield = mSavingsBean.getYield();
+            mExpectedInterest = mSavingsBean.getInterest();
             Log.d(Constants.LOG_TAG, "Edit mode, displayed existing savings item:");
             Log.d(Constants.LOG_TAG, mSavingsBean.toString());
 

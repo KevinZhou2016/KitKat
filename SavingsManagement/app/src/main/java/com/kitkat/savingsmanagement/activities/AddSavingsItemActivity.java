@@ -3,9 +3,8 @@ package com.kitkat.savingsmanagement.activities;
 import android.app.DatePickerDialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
@@ -231,8 +230,24 @@ public class AddSavingsItemActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Click listener for Cancel button
+     *
+     * @param view the cancel button
+     */
     public void onCancelClicked(View view) {
-        onBackPressed();
+        if (mEditMode) {
+            // remove the item from database
+            getContentResolver().delete(SavingsContentProvider.CONTENT_URI,
+                    SavingsItemEntry._ID + "=" + mSavingsBean.getId(), null);
+            Log.d(Constants.LOG_TAG, "Edit mode, deleted existing savings item:");
+            Log.d(Constants.LOG_TAG, mSavingsBean.toString());
+            // Go back to dashboard
+            Utils.gotoDashBoard(this);
+            finish();
+        } else {
+            finish();
+        }
     }
 
     public void onSaveClicked(View view) {
@@ -246,10 +261,22 @@ public class AddSavingsItemActivity extends AppCompatActivity {
             values.put(SavingsItemEntry.COLUME_NAME_YIELD, mAnnualizedYield);
             values.put(SavingsItemEntry.COLUME_NAME_INTEREST, mExpectedInterest);
 
-            getContentResolver().insert(SavingsContentProvider.CONTENT_URI, values);
+            if (mEditMode) {
+                // Update the data into database by ContentProvider
+                getContentResolver().update(SavingsContentProvider.CONTENT_URI, values,
+                        SavingsItemEntry._ID + "=" + mSavingsBean.getId(), null);
+                Log.d(Constants.LOG_TAG, "Edit mode, updated existing savings item: " + mSavingsBean.getId());
+            } else {
+                // Add the data into database by ContentProvider
+                getContentResolver().insert(
+                        SavingsContentProvider.CONTENT_URI,
+                        values
+                );
+            }
 
-            Intent intent = new Intent(this, DashboardActivity.class);
-            startActivity(intent);
+            // Go back to dashboard
+            Utils.gotoDashBoard(this);
+            finish();
 
         } else {
             Toast.makeText(this, R.string.missing_savings_infomation, Toast.LENGTH_LONG).show();

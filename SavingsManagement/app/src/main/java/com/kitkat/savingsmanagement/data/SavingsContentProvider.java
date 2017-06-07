@@ -2,12 +2,9 @@ package com.kitkat.savingsmanagement.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
-import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
-import android.text.TextUtils;
 
 import static com.kitkat.savingsmanagement.data.SavingsItemEntry.TABLE_NAME;
 
@@ -30,17 +27,9 @@ public class SavingsContentProvider extends ContentProvider {
         // Implement this to handle requests to delete one or more rows.
 
         mDatabase = mOpenHelper.getWritableDatabase();
-        int rowsDeleted = 0;
-
-        String id = uri.getLastPathSegment();
-        if (TextUtils.isEmpty(selection)) {
-            rowsDeleted = mDatabase.delete(TABLE_NAME, SavingsItemEntry._ID + "=" + id, null);
-        } else {
-            rowsDeleted = mDatabase.delete(TABLE_NAME, SavingsItemEntry._ID + "=" + id
-                    + " and " + selection, selectionArgs);
-        }
+        int rowID = mDatabase.delete(TABLE_NAME, selection, selectionArgs);
         getContext().getContentResolver().notifyChange(uri, null);
-        return rowsDeleted;
+        return rowID;
     }
 
     @Override
@@ -79,13 +68,21 @@ public class SavingsContentProvider extends ContentProvider {
         mDatabase = mOpenHelper.getReadableDatabase();
         Cursor cursor = mDatabase.query(TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
 
-        return cursor != null ? cursor : null;
+        if (cursor != null) {
+            cursor.setNotificationUri(getContext().getContentResolver(), uri);
+            return cursor;
+        }else{
+            return null;
+        }
+
     }
 
     @Override
     public int update(Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        // TODO: Implement this to handle requests to update one or more rows.
-        throw new UnsupportedOperationException("Not yet implemented");
+        mDatabase = mOpenHelper.getWritableDatabase();
+        int rowID = mDatabase.update(TABLE_NAME, values, selection, selectionArgs);
+        getContext().getContentResolver().notifyChange(uri, null);
+        return rowID;
     }
 }

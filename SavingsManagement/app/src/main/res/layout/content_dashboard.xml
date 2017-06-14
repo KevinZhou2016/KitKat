@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.eric.savingsmanager.activities.DashBoardActivity"
-    tools:showIn="@layout/app_bar_dash_board">
+    tools:context="com.kitkat.savingsmanagement.activities.DashboardActivity"
+    tools:showIn="@layout/app_bar_dashboard">
 
     <ListView
         android:id="@+id/lv_savings"

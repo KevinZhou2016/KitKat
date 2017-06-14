@@ -195,7 +195,6 @@ public class DashboardActivity extends AppCompatActivity
         }
         if (cursor != null) {
             cursor.close();
-            cursor = null;
         }
 
         mListAdapter.notifyDataSetChanged();

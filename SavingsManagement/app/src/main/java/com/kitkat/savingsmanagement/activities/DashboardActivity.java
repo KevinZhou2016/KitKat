@@ -42,6 +42,8 @@ public class DashboardActivity extends AppCompatActivity
     ArrayList<SavingsBean> mSavingsBeanList = new ArrayList<>();
     private ProgressBar mProgressBar;
     private Date mNextDueSavingsDate;
+    private TextView mTotalTextView;
+    private float totalInterest;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +87,7 @@ public class DashboardActivity extends AppCompatActivity
         mProgressBar = (ProgressBar) findViewById(R.id.pb);
         mSavingsItemListView.setEmptyView(mProgressBar);
         mListAdapter = new SavingsItemListAdapter();
+        mTotalTextView = (TextView) findViewById(R.id.txt_total_interest_value);
 
         mSavingsItemListView.setAdapter(mListAdapter);
         mSavingsItemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -140,18 +143,8 @@ public class DashboardActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.addItem) {
+            startAddSavingsItemScreen();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -175,6 +168,7 @@ public class DashboardActivity extends AppCompatActivity
 
         // load from database and add into list
         Cursor cursor = getContentResolver().query(SavingsContentProvider.CONTENT_URI, null, null, null, "_id asc", null);
+        totalInterest = 0;
         while (cursor != null && cursor.moveToNext()) {
             SavingsBean savingsBean = new SavingsBean();
             long id = cursor.getLong(cursor.getColumnIndex(SavingsItemEntry._ID));
@@ -191,6 +185,7 @@ public class DashboardActivity extends AppCompatActivity
             savingsBean.setAmount(amount);
             savingsBean.setYield(yield);
             savingsBean.setInterest(interest);
+            totalInterest +=  interest;
             mSavingsBeanList.add(savingsBean);
         }
         if (cursor != null) {
@@ -198,14 +193,13 @@ public class DashboardActivity extends AppCompatActivity
         }
 
         mListAdapter.notifyDataSetChanged();
-
+        mTotalTextView.setText(String.valueOf(totalInterest));
         if (!Utils.isNullOrEmpty(mSavingsBeanList)) {
             mNextDueSavingsDate = DataManager.getNextDueSavingsItemDate(mSavingsBeanList);
             if (mNextDueSavingsDate != null) {
                 // schedule an alarm
                 AlarmsManager.scheduleAlarm(this, mNextDueSavingsDate);
             }
-
         }
     }
 
